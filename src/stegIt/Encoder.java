@@ -107,10 +107,6 @@ public class Encoder {
 
 			}
 		}
-		System.out.println("Encoded Bytes");
-		for(int i = 0; i < 8; i++)  {
-			System.out.println(imgBytes[32+i]);
-		}
 		
 		return image;
 	}
