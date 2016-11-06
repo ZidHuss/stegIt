@@ -1,5 +1,6 @@
 package stegIt;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,7 +10,7 @@ import java.io.IOException;
 public class ByteMedia extends ByteData {
 
 	static final int OFFSET = 500;
-	private FileInputStream mediaInput;
+	private BufferedInputStream mediaInput;
 
 	public ByteMedia(String filePath) {
 		super();
@@ -18,11 +19,11 @@ public class ByteMedia extends ByteData {
 
 	}
 
-	private FileInputStream loadMedia(String filePath) {
-		FileInputStream mediaInput = null;
+	private BufferedInputStream loadMedia(String filePath) {
+		BufferedInputStream mediaInput = null;
 
 		try {
-			mediaInput = new FileInputStream(filePath);
+			mediaInput = new BufferedInputStream(new FileInputStream(filePath));
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -52,13 +53,12 @@ public class ByteMedia extends ByteData {
 		try {
 			fileOutput = new FileOutputStream(file);
 			fileOutput.write(data);
-			fileOutput.flush();
 			fileOutput.close();
 		} catch (FileNotFoundException e) {		
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 
 	}
 
