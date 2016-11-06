@@ -17,7 +17,7 @@ public class Decoder {
 		return new String(msgBytes);
 	}
 
-	public byte[] generateMessage(byte[] imgBytes, byte[] msgBytes) {
+	private byte[] generateMessage(byte[] imgBytes, byte[] msgBytes) {
 
 		int offset = 32;
 		for (int i = 0; i < msgBytes.length; i++) {
@@ -34,7 +34,7 @@ public class Decoder {
 
 	}
 
-	public byte[] returnMessageLength(byte[] imgBytes) {
+	private byte[] returnMessageLength(byte[] imgBytes) {
 
 		int length = 0;
 

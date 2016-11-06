@@ -19,7 +19,7 @@ public class Encoder {
 
 	}
 
-	public void addMessageLength(byte[] image, int length) {
+	private void addMessageLength(byte[] image, int length) {
 
 		int offset = 0;
 
@@ -42,7 +42,7 @@ public class Encoder {
 
 	}
 
-	public void addText(byte[] imageBytes, String msg, int offset) {
+	private void addText(byte[] imageBytes, String msg, int offset) {
 
 		if ((msg.length() + offset) > imageBytes.length) {
 			throw new IllegalArgumentException("File is too small for message!");
