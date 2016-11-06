@@ -20,16 +20,16 @@ public class Encoder {
 		try {
 			img = ImageIO.read(file);
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 
-		BufferedImage sandboxedImg = new BufferedImage(img.getWidth(),img.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage sandboxedImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 
 		Graphics2D graphics = sandboxedImg.createGraphics();
 		graphics.drawRenderedImage(img, null);
-		// graphics.dispose();
-		
+		graphics.dispose();
+
 		return sandboxedImg;
 	}
 
@@ -43,70 +43,79 @@ public class Encoder {
 	}
 
 	public void saveImage(BufferedImage image, String destinationPath) {
-			
-		
-		File file =  new File(destinationPath);
-		
-		file.delete();
+
+		File file = new File(destinationPath);
+
 		try {
+			file.delete();
 			ImageIO.write(image, "png", file);
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
-		
 
 	}
 
 	public void encodeMessage(String source, String destination, String msg) {
+
+		BufferedImage image = sandboxImage(source);
 		
-		BufferedImage image = sandboxImage(source); 
+		try {
 		image = addText(image, msg, 32);
-		
-		saveImage(image, destination); 
-		
-		
-		
-		
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+
+		saveImage(image, destination);
+
 	}
-	
+
 	public void addMessageLength(byte[] image, int length) {
+
 		
 		int offset = 0;
-		byte[] lengthBytes = new byte[]{0,0,0, (byte)(length & 0x000000FF)};
-		
+
+		byte byte3 = (byte) ((length & 0xFF000000) >>> 24);
+		byte byte2 = (byte) ((length & 0x00FF0000) >>> 16);
+		byte byte1 = (byte) ((length & 0x0000FF00) >>> 8);
+		byte byte0 = (byte) ((length & 0x000000FF));
+
+		byte[] lengthBytes = new byte[] { byte3, byte2, byte1, byte0 };
+
 		for (int i = 0; i < lengthBytes.length; i++) {
 
 			int byt = lengthBytes[i];
 			for (int j = 7; j >= 0; j--, offset++) {
 
-				int lsb = (byt >>> j) & 1;			
-				image[offset] = (byte) ((image[offset] & 0xFE) | lsb);				
+				int lsb = (byt >>> j) & 1;
+				image[offset] = (byte) ((image[offset] & 0xFE) | lsb);
 			}
 		}
-		
+
 	}
 
 	public BufferedImage addText(BufferedImage image, String msg, int offset) {
+	
+		byte[] imgBytes = generateImageBytes(image);
 		
-		byte[] imgBytes = generateImageBytes(image); 
+		if((msg.length() + offset) > imgBytes.length) {
+			throw new IllegalArgumentException("File is too small for message!"); 
+		}
+		
 		addMessageLength(imgBytes, msg.length());
 		byte[] msgBytes = msg.getBytes();
-		
 
 		for (int i = 0; i < msgBytes.length; i++) {
 
 			int byt = msgBytes[i];
-
 			for (int j = 7; j >= 0; j--, offset++) {
 
 				int lsb = (byt >>> j) & 1;
-				
 				imgBytes[offset] = (byte) ((imgBytes[offset] & 0xFE) | lsb);
 
 			}
 		}
-		
+
 		return image;
 	}
 
