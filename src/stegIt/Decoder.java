@@ -52,7 +52,7 @@ public class Decoder {
 		
 		byte[] imgBytes = generateBytes(sourceFile);
 		
-		for(int x = 0; x < 32; ++x) {
+		for(int x = 0; x < 32; x++) {
 			length = (length << 1) | (imgBytes[x] & 1); 
 		}
 		
@@ -61,7 +61,7 @@ public class Decoder {
 		
 		for(int i = 0; i < msgBytes.length; ++i) {
 			
-			for(int j = 0; j < 8; ++j, ++offset) {
+			for(int j = 0; j < 8; j++, offset++) {
 				
 				msgBytes[i] = (byte) ((msgBytes[i] << 1)| (imgBytes[offset] & 1));
 				

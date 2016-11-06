@@ -24,11 +24,11 @@ public class Encoder {
 			e.printStackTrace();
 		}
 
-		BufferedImage sandboxedImg = new BufferedImage(img.getHeight(), img.getWidth(), BufferedImage.TYPE_3BYTE_BGR);
+		BufferedImage sandboxedImg = new BufferedImage(img.getWidth(),img.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 
 		Graphics2D graphics = sandboxedImg.createGraphics();
 		graphics.drawRenderedImage(img, null);
-		graphics.dispose();
+		// graphics.dispose();
 		
 		return sandboxedImg;
 	}
@@ -75,10 +75,10 @@ public class Encoder {
 		int offset = 0;
 		byte[] lengthBytes = new byte[]{0,0,0, (byte)(length & 0x000000FF)};
 		
-		for (int i = 0; i < lengthBytes.length; ++i) {
+		for (int i = 0; i < lengthBytes.length; i++) {
 
 			int byt = lengthBytes[i];
-			for (int j = 7; j >= 0; --j, ++offset) {
+			for (int j = 7; j >= 0; j--, offset++) {
 
 				int lsb = (byt >>> j) & 1;			
 				image[offset] = (byte) ((image[offset] & 0xFE) | lsb);				
@@ -94,16 +94,15 @@ public class Encoder {
 		byte[] msgBytes = msg.getBytes();
 		
 
-		for (int i = 0; i < msgBytes.length; ++i) {
+		for (int i = 0; i < msgBytes.length; i++) {
 
 			int byt = msgBytes[i];
 
-			for (int j = 7; j >= 0; --j, ++offset) {
+			for (int j = 7; j >= 0; j--, offset++) {
 
 				int lsb = (byt >>> j) & 1;
 				
 				imgBytes[offset] = (byte) ((imgBytes[offset] & 0xFE) | lsb);
-				
 
 			}
 		}
