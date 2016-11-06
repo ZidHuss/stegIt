@@ -14,11 +14,11 @@ public class ByteAudio extends ByteData {
 	public ByteAudio(String filePath) {
 		super();
 		audioInput = loadAudio(filePath);
-		super.data = generateAudioBytes(audioInput);
+		super.data = generateAudioBytes();
 
 	}
 
-	public FileInputStream loadAudio(String filePath) {
+	private FileInputStream loadAudio(String filePath) {
 		FileInputStream audioInput = null;
 
 		try {
@@ -32,12 +32,12 @@ public class ByteAudio extends ByteData {
 
 	}
 
-	public byte[] generateAudioBytes(FileInputStream input) {
+	private byte[] generateAudioBytes() {
 
 		byte[] audioBytes = null;
 		try {
-			audioBytes = new byte[input.available()];
-			input.read(audioBytes);
+			audioBytes = new byte[audioInput.available()];
+			audioInput.read(audioBytes);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
