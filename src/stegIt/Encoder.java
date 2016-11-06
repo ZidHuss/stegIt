@@ -48,13 +48,10 @@ public class Encoder {
 
 			int byt = msgBytes[i];
 			for (int j = 7; j >= 0; j--, offset++) {
-
 				int lsb = (byt >>> j) & 1;
 				dataBytes[offset] = (byte) ((dataBytes[offset] & 0xFE) | lsb);
-
 			}
 		}
-
 	}
-
+	
 }
