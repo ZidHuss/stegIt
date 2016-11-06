@@ -1,63 +1,25 @@
 package stegIt;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 public class Decoder {
 
 	public Decoder() {
 	}
 
-	public BufferedImage sandboxImage(String sourcePath) {
-		BufferedImage img = null;
-		File file = new File(sourcePath);
+	public String decode(String sourceFile) {
 
-		try {
-			img = ImageIO.read(file);
-		} catch (IOException e) {
+		BufferedByteImage image = new BufferedByteImage(sourceFile);
 
-			e.printStackTrace();
-		}
+		byte[] imgBytes = image.getImageBytes();
+		byte[] msgBytes = returnMessageLength(imgBytes);
 
-		BufferedImage sandboxedImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+		msgBytes = generateMessage(imgBytes, msgBytes);
 
-		Graphics2D graphics = sandboxedImg.createGraphics();
-		graphics.drawRenderedImage(img, null);
-		graphics.dispose();
-		return sandboxedImg;
+		return new String(msgBytes);
 	}
 
-	public byte[] generateBytes(BufferedImage img) {
+	public byte[] generateMessage(byte[] imgBytes, byte[] msgBytes) {
 
-		WritableRaster raster = img.getRaster();
-		DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
-
-		return buffer.getData();
-
-	}
-
-	public byte[] decode(String sourceFile) {
-
-		BufferedImage img = sandboxImage(sourceFile);
-
-		int length = 0;
 		int offset = 32;
-
-		byte[] imgBytes = generateBytes(img);
-
-		for (int x = 0; x < 32; x++) {
-			length = (length << 1) | (imgBytes[x] & 1);
-			;
-		}
-
-		byte[] msgBytes = new byte[length];
-
 		for (int i = 0; i < msgBytes.length; i++) {
 
 			for (int j = 0; j < 8; j++, offset++) {
@@ -69,6 +31,21 @@ public class Decoder {
 		}
 
 		return msgBytes;
+
+	}
+
+	public byte[] returnMessageLength(byte[] imgBytes) {
+
+		int length = 0;
+
+		for (int x = 0; x < 32; x++) {
+			length = (length << 1) | (imgBytes[x] & 1);
+			;
+		}
+
+		byte[] msgBytes = new byte[length];
+		return msgBytes;
+
 	}
 
 }

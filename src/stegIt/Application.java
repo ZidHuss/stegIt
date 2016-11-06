@@ -9,12 +9,12 @@ public class Application {
 			str += "A";
 		}
 		Encoder enc = new Encoder();
-		enc.encodeMessage("cat.png","cat3.png",str);
+		enc.encodeMessage("cat.png","cat4.png",str);
 
-		Decoder dec = new Decoder(); 
-		byte[] msg = dec.decode("cat3.png");
+		 Decoder dec = new Decoder(); 
+		 String msg = dec.decode("cat4.png");
 		
-		System.out.println(new String(msg));
+		 System.out.println(new String(msg));
 		
 
 	}
