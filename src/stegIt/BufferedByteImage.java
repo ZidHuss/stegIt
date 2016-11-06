@@ -15,7 +15,7 @@ public class BufferedByteImage {
 	private BufferedImage image;
 
 	public BufferedByteImage(String filePath) {
-		image = createUserSpace(loadImage(filePath));
+		image = loadImage(filePath);
 		imageBytes = generateImageBytes(image);
 	}
 
@@ -23,32 +23,19 @@ public class BufferedByteImage {
 		return imageBytes;
 	}
 
-	private BufferedImage createUserSpace(BufferedImage image) {
-
-		BufferedImage imageInUserSpace = new BufferedImage(image.getWidth(), image.getHeight(),
-				BufferedImage.TYPE_3BYTE_BGR);
-
-		Graphics2D graphic = imageInUserSpace.createGraphics();
-		graphic.drawRenderedImage(image, null);
-		graphic.dispose();
-
-		return imageInUserSpace;
-
-	}
 
 	private BufferedImage loadImage(String source) {
 		File file = new File(source);
 
-		BufferedImage img = null;
+		BufferedImage image = null;
 
 		try {
-
-			img = ImageIO.read(file);
+			image = ImageIO.read(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		return img;
+		return image;
 	}
 
 	private byte[] generateImageBytes(BufferedImage image) {

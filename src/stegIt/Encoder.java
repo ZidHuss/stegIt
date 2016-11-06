@@ -8,13 +8,7 @@ public class Encoder {
 	public void encodeMessage(String source, String destination, String msg) {
 
 		BufferedByteImage image = new BufferedByteImage(source);
-
-		try {
-			addText(image.getImageBytes(), msg, 32);
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
-
+		addText(image.getImageBytes(), msg, 32);
 		image.saveImage(destination);
 
 	}
