@@ -1,6 +1,5 @@
 package stegIt;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
@@ -9,20 +8,16 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class BufferedByteImage {
+public class ByteImage extends ByteData {
 
-	private byte[] imageBytes;
+	static final int OFFSET = 0;
 	private BufferedImage image;
 
-	public BufferedByteImage(String filePath) {
+	public ByteImage(String filePath) {
+		super();
 		image = loadImage(filePath);
-		imageBytes = generateImageBytes(image);
+		super.data = generateImageBytes(image);
 	}
-
-	public byte[] getImageBytes() {
-		return imageBytes;
-	}
-
 
 	private BufferedImage loadImage(String source) {
 		File file = new File(source);
@@ -46,14 +41,13 @@ public class BufferedByteImage {
 		return buffer.getData();
 	}
 
-	public void saveImage(String destination) {
+	public void write(String destination) {
 
 		File file = new File(destination);
 
 		try {
 			ImageIO.write(image, "png", file);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

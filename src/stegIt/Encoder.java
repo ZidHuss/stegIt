@@ -5,17 +5,14 @@ public class Encoder {
 	public Encoder() {
 	}
 
-	public void encodeMessage(String source, String destination, String msg) {
+	public void encodeMessage(ByteData source, String destination, String msg, int sourceOffset) {
 
-		BufferedByteImage image = new BufferedByteImage(source);
-		addText(image.getImageBytes(), msg, 32);
-		image.saveImage(destination);
+		addText(source.getData(), msg, sourceOffset);
+		source.write(destination);
 
 	}
 
-	private void addMessageLength(byte[] image, int length) {
-
-		int offset = 0;
+	private void addMessageLength(byte[] data, int length, int offset) {
 
 		byte byte3 = (byte) ((length & 0xFF000000) >>> 24);
 		byte byte2 = (byte) ((length & 0x00FF0000) >>> 16);
@@ -30,20 +27,22 @@ public class Encoder {
 			for (int j = 7; j >= 0; j--, offset++) {
 
 				int lsb = (byt >>> j) & 1;
-				image[offset] = (byte) ((image[offset] & 0xFE) | lsb);
+				data[offset] = (byte) ((data[offset] & 0xFE) | lsb);
 			}
 		}
 
 	}
 
-	private void addText(byte[] imageBytes, String msg, int offset) {
+	private void addText(byte[] dataBytes, String msg, int offset) {
 
-		if ((msg.length() + offset) > imageBytes.length) {
+		if ((msg.length() + offset) > dataBytes.length) {
 			throw new IllegalArgumentException("File is too small for message!");
 		}
 
-		addMessageLength(imageBytes, msg.length());
+		addMessageLength(dataBytes, msg.length(), offset);
 		byte[] msgBytes = msg.getBytes();
+		offset += 32; // increase offset by 32 bits (4 bytes) to account for
+						// encoding message length
 
 		for (int i = 0; i < msgBytes.length; i++) {
 
@@ -51,7 +50,7 @@ public class Encoder {
 			for (int j = 7; j >= 0; j--, offset++) {
 
 				int lsb = (byt >>> j) & 1;
-				imageBytes[offset] = (byte) ((imageBytes[offset] & 0xFE) | lsb);
+				dataBytes[offset] = (byte) ((dataBytes[offset] & 0xFE) | lsb);
 
 			}
 		}
