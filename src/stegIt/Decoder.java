@@ -14,14 +14,13 @@ public class Decoder {
 	 *            offset to start decoding from
 	 * @return decoded message as a String
 	 */
-	public String decode(ByteData source, int dataOffset) {
+	public byte[] decode(byte[] sourceData, int dataOffset) {
 
-		byte[] dataBytes = source.getData();
-		int length = returnMessageLength(dataBytes, dataOffset);
+		int length = returnMessageLength(sourceData, dataOffset);
 		dataOffset += 32; // increase offset by 32 bits (4 bytes) to account for
 							// encoding message length
 
-		return new String(generateMessage(dataBytes, length, (dataOffset)));
+		return generateMessage(sourceData, length, dataOffset);
 	}
 
 	/**
@@ -39,7 +38,6 @@ public class Decoder {
 		for (int i = 0; i < messageBytes.length; i++) {
 
 			for (int j = 0; j < 8; j++, offset++) {
-
 				messageBytes[i] = (byte) ((messageBytes[i] << 1) | (dataBytes[offset] & 1));
 			}
 		}

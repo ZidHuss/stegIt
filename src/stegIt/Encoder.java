@@ -5,10 +5,9 @@ public class Encoder {
 	public Encoder() {
 	}
 
-	public void encodeMessage(ByteData source, String destination, String msg, int sourceOffset) {
+	public void encodeMessage(byte[] sourceData, byte[] encodeData, int sourceOffset) {
 
-		addText(source.getData(), msg, sourceOffset);
-		source.write(destination);
+		addText(sourceData, encodeData, sourceOffset);
 
 	}
 
@@ -33,25 +32,25 @@ public class Encoder {
 
 	}
 
-	private void addText(byte[] dataBytes, String msg, int offset) {
+	private void addText(byte[] dataBytes, byte[] encodeData, int offset) {
 
-		if ((msg.length() + offset) > dataBytes.length) {
+		if ((encodeData.length + offset) > dataBytes.length) {
 			throw new IllegalArgumentException("File is too small for message!");
 		}
 
-		addMessageLength(dataBytes, msg.length(), offset);
-		byte[] msgBytes = msg.getBytes();
+		addMessageLength(dataBytes, encodeData.length, offset);
 		offset += 32; // increase offset by 32 bits (4 bytes) to account for
 						// encoding message length
 
-		for (int i = 0; i < msgBytes.length; i++) {
+		for (int i = 0; i < encodeData.length; i++) {
+			
 
-			int byt = msgBytes[i];
+			int byt = encodeData[i];
 			for (int j = 7; j >= 0; j--, offset++) {
 				int lsb = (byt >>> j) & 1;
 				dataBytes[offset] = (byte) ((dataBytes[offset] & 0xFE) | lsb);
 			}
 		}
 	}
-	
+
 }

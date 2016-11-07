@@ -5,15 +5,14 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
-public class ByteImage extends ByteData {
+public class ByteDataImage extends ByteData {
 
 	static final int OFFSET = 0;
 	private BufferedImage image;
 
-	public ByteImage(String filePath) {
+	public ByteDataImage(String filePath) {
 		super();
 		image = loadImage(filePath);
 		super.data = generateImageBytes(image);
@@ -21,7 +20,6 @@ public class ByteImage extends ByteData {
 
 	private BufferedImage loadImage(String source) {
 		File file = new File(source);
-
 		BufferedImage image = null;
 
 		try {
